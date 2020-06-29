@@ -65,6 +65,7 @@
     },
     created() {
       this.headwayInit();
+      console.log(process.env);
     }
   }
 </script>
