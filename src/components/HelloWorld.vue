@@ -1,7 +1,8 @@
 <template>
   <div class="hello">
     <h1>{{ msg }}</h1>
-    <h1 style="color: red">Texts from process env: {{ process.env }}</h1>
+    Changelog: 
+    <div id="wemail-changelog"></div>
     <p>
       For a guide and recipes on how to configure / customize this project,<br>
       check out the
@@ -34,14 +35,37 @@
   </div>
 </template>
 
-<script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+<script>
+ export default {
+    name: 'headway',
+    data () {
+      return {
+        config: {
+          selector: '#wemail-changelog',
+          account: process.env.VUE_APP_HEADWAY_ACCOUNT_ID,
+        }
+      }
+    },
+    methods: {
+      headwayInit() {
+        let s1 = document.createElement("script");
+        let s0 = document.getElementsByTagName("script")[0];
+        s1.async = true;
+        s1.src = "https://cdn.headwayapp.co/widget.js";
+        s0.parentNode.insertBefore(s1, s0);
+        s1.onload = () => this.onHeadwayLoad();
+      },
+      onHeadwayLoad() {
+        if ( ! window.Headway ) {
+          return;
+        }
 
-@Component
-export default class HelloWorld extends Vue {
-  @Prop() private msg!: string;
-  @Prop() private version!: string;
-}
+        window.Headway.init( this.config );
+      },
+    },
+    created() {
+      this.headwayInit();
+    }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
